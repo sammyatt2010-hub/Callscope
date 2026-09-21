@@ -6,7 +6,7 @@ import streamlit as st
 # Settings you may want to change
 # ---------------------------------------------------------------
 VIDEO_FILE = "call-scope.mp4"   # video file that sits next to app.py in GitHub
-VIDEO_URL = ""                  # or paste an unlisted YouTube/Vimeo link here (it takes priority)
+VIDEO_URL = "https://youtu.be/7ZRMqGe3bb8"                  # or paste an unlisted YouTube/Vimeo link here (it takes priority)
 LOGO_FILE = "logo.png"          # optional: add a logo.png next to app.py to show it at the top
 
 DEMO_URL = "https://sycomms.co.uk/get-in-touch"
