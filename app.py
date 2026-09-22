@@ -70,6 +70,12 @@ st.set_page_config(
     layout="wide",
 )
 
+# Which page to show: the homepage, or one industry's video page.
+# A card link like "?industry=accountants" reloads this same app with that
+# set, so Streamlit renders the industry branch below instead of the homepage.
+selected_slug = st.query_params.get("industry")
+selected_industry = next((i for i in INDUSTRIES if i["slug"] == selected_slug), None)
+
 # ---------------------------------------------------------------
 # Brand styling
 # ---------------------------------------------------------------
@@ -227,6 +233,18 @@ st.markdown(
         margin: 0;
         line-height: 1.4;
     }
+
+    a.back-link {
+        display: inline-block;
+        color: #b9b3dd !important;
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: none !important;
+        margin-bottom: 1.5rem;
+    }
+    a.back-link:hover {
+        color: #f5f3fb !important;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -236,6 +254,50 @@ st.markdown(
 # Page content
 # ---------------------------------------------------------------
 logo_path = HERE / LOGO_FILE
+
+if selected_industry:
+    # --- One industry's video page -------------------------------------
+    if logo_path.exists():
+        st.image(str(logo_path), width=72)
+
+    st.markdown('<a class="back-link" href="?">&larr; Back to Call Scope</a>', unsafe_allow_html=True)
+
+    st.markdown(
+        f"""
+        <h1 class="hero-title">{selected_industry['name']}</h1>
+        <p class="hero-sub">{selected_industry['blurb']}</p>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    if USE_VIDEO_LINKS:
+        st.video(selected_industry["url"])
+    else:
+        st.info(
+            f"The {selected_industry['name']} video isn't uploaded yet. "
+            "Here's a preview of the slides it's based on instead."
+        )
+        st.markdown(
+            f'<a class="cta" href="{selected_industry["deck_url"]}" target="_blank" rel="noopener">'
+            "Preview the slides</a>",
+            unsafe_allow_html=True,
+        )
+
+    st.markdown(
+        f"""
+        <div class="cta-row">
+            <a class="cta" href="{DEMO_URL}" target="_blank" rel="noopener">Book a demo</a>
+            <a class="text-link" href="{PRODUCT_URL}" target="_blank" rel="noopener">See everything Call Scope does</a>
+        </div>
+        <p class="contact">Call <a href="{PHONE_LINK}">{PHONE}</a>
+        or email <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+        <p class="footer">&copy; SY Comms</p>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.stop()
+
+# --- Homepage -------------------------------------------------------------
 if logo_path.exists():
     st.image(str(logo_path), width=72)
 
@@ -309,7 +371,7 @@ st.markdown(
 # Industry use cases
 cards_html = "".join(
     f"""
-    <a class="industry-card" href="{ind['url']}" target="_blank" rel="noopener">
+    <a class="industry-card" href="?industry={ind['slug']}">
         <p class="industry-name">{ind['name']}</p>
         <p class="industry-blurb">{ind['blurb']}</p>
     </a>
