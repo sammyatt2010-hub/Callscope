@@ -15,6 +15,56 @@ PHONE = "01743 667419"
 PHONE_LINK = "tel:01743667419"
 EMAIL = "hello@sycomms.co.uk"
 
+# --- Industry videos, hosted directly in this GitHub repo ---------------
+# Fill in your GitHub username and repo name below, then upload each clip
+# into a folder called "videos" in the repo, named exactly as the "slug"
+# shown for each industry (e.g. videos/estate-agents.mp4). Once both are
+# set, USE_VIDEO_LINKS switches every card below from the slide-deck
+# preview over to the video itself automatically - no other edits needed.
+GITHUB_USER = ""          # e.g. "samsmith"
+GITHUB_REPO = "callscope"  # your repo name
+GITHUB_BRANCH = "main"
+USE_VIDEO_LINKS = bool(GITHUB_USER)
+
+# Industry use cases. Each "deck_url" is that industry's short slide-deck
+# preview (used until USE_VIDEO_LINKS is on); "slug" is the video filename,
+# without the .mp4, that this card will link to once it's uploaded.
+INDUSTRIES = [
+    {"name": "Estate Agents", "blurb": "Enquiries summarised, viewings scheduled.",
+     "slug": "estate-agents", "deck_url": "https://claude.ai/artifact/8iGZVDgF7zyvTGDuheYAyW"},
+    {"name": "Recruitment Agencies", "blurb": "Every candidate and client call, actioned.",
+     "slug": "recruitment-agencies", "deck_url": "https://claude.ai/artifact/TFzzxgYiKeavngSDh6TWLW"},
+    {"name": "Law Firms", "blurb": "Clear, accurate records for every client call.",
+     "slug": "law-firms", "deck_url": "https://claude.ai/artifact/Y1w5iDCkejxTG1M6rJ3gL7"},
+    {"name": "Financial Services", "blurb": "Complete records, clearer oversight.",
+     "slug": "financial-services", "deck_url": "https://claude.ai/artifact/NMTXpM8yh2DmRsNFRQKjWi"},
+    {"name": "Dental Practices", "blurb": "Less time on the phone, more with patients.",
+     "slug": "dental-practices", "deck_url": "https://claude.ai/artifact/QyDgiceswZXYwNwoFfJkFE"},
+    {"name": "Automotive Dealers & Garages", "blurb": "From enquiry to confirmed booking.",
+     "slug": "automotive-dealers-garages", "deck_url": "https://claude.ai/artifact/1XaPzmHJhm42tQ5N9f434p"},
+    {"name": "Accountants", "blurb": "No client enquiry slips through the net.",
+     "slug": "accountants", "deck_url": "https://claude.ai/artifact/BJxpkjNMmAMdDVjijEftnp"},
+    {"name": "Insurance Brokers", "blurb": "Advice and renewal calls, captured for compliance.",
+     "slug": "insurance-brokers", "deck_url": "https://claude.ai/artifact/4hBgtGS7h71CpTKZjeU47Z"},
+    {"name": "Veterinary Practices", "blurb": "Every client interaction, recorded.",
+     "slug": "veterinary-practices", "deck_url": "https://claude.ai/artifact/Jac7x1ZfseiQ9HHuBfG3Mj"},
+    {"name": "Opticians", "blurb": "Consistent service, on autopilot.",
+     "slug": "opticians", "deck_url": "https://claude.ai/artifact/WPKA4TGBcKu8HnE42wGtpV"},
+    {"name": "Property Management", "blurb": "Every tenant call, tracked and actioned.",
+     "slug": "property-management", "deck_url": "https://claude.ai/artifact/XDJ9Aj5naVBdKcx4EE6gnf"},
+    {"name": "Customer Service & Contact Centres", "blurb": "Live visibility, every agent.",
+     "slug": "customer-service-contact-centres", "deck_url": "https://claude.ai/artifact/BmQvQSvCy4nTiWkP6i4D86"},
+]
+
+for _ind in INDUSTRIES:
+    if USE_VIDEO_LINKS:
+        _ind["url"] = (
+            f"https://raw.githubusercontent.com/{GITHUB_USER}/{GITHUB_REPO}"
+            f"/{GITHUB_BRANCH}/videos/{_ind['slug']}.mp4"
+        )
+    else:
+        _ind["url"] = _ind["deck_url"]
+
 HERE = Path(__file__).parent
 
 st.set_page_config(
@@ -134,6 +184,52 @@ st.markdown(
         font-size: 0.9rem;
         color: #8f88c4;
     }
+
+    .industries-heading {
+        margin-top: 4rem;
+        font-size: 1.9rem;
+        font-weight: 800;
+        color: #f5f3fb;
+    }
+    .industries-sub {
+        font-size: 1.05rem;
+        color: #b9b3dd;
+        margin-bottom: 1.5rem;
+    }
+    .industry-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1rem;
+    }
+    a.industry-card {
+        display: block;
+        background: #2d1f6e;
+        border: 1px solid #443596;
+        border-radius: 12px;
+        padding: 1.3rem;
+        text-decoration: none !important;
+        transition: border-color 0.15s ease, background 0.15s ease;
+    }
+    a.industry-card:hover {
+        background: #382a80;
+        border-color: #00b5a3;
+    }
+    a.industry-card:focus-visible {
+        outline: 3px solid #f5f3fb;
+        outline-offset: 3px;
+    }
+    .industry-name {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #f5f3fb !important;
+        margin: 0 0 0.4rem 0;
+    }
+    .industry-blurb {
+        font-size: 0.95rem;
+        color: #b9b3dd !important;
+        margin: 0;
+        line-height: 1.4;
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -209,6 +305,25 @@ st.markdown(
     </div>
     <p class="contact">Call <a href="{PHONE_LINK}">{PHONE}</a>
     or email <a href="mailto:{EMAIL}">{EMAIL}</a></p>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Industry use cases
+cards_html = "".join(
+    f"""
+    <a class="industry-card" href="{ind['url']}" target="_blank" rel="noopener">
+        <p class="industry-name">{ind['name']}</p>
+        <p class="industry-blurb">{ind['blurb']}</p>
+    </a>
+    """
+    for ind in INDUSTRIES
+)
+st.markdown(
+    f"""
+    <h2 class="industries-heading">See it for your industry</h2>
+    <p class="industries-sub">Real benefits, sector by sector. Pick yours below.</p>
+    <div class="industry-grid">{cards_html}</div>
     <p class="footer">&copy; SY Comms</p>
     """,
     unsafe_allow_html=True,
