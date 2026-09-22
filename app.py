@@ -16,13 +16,10 @@ PHONE_LINK = "tel:01743667419"
 EMAIL = "hello@sycomms.co.uk"
 
 # --- Industry videos, hosted directly in this GitHub repo ---------------
-# Fill in your GitHub username and repo name below, then upload each clip
-# into a folder called "videos" in the repo, named exactly as the "slug"
-# shown for each industry (e.g. videos/estate-agents.mp4). Once both are
-# set, USE_VIDEO_LINKS switches every card below from the slide-deck
-# preview over to the video itself automatically - no other edits needed.
-GITHUB_USER = ""          # e.g. "samsmith"
-GITHUB_REPO = "callscope"  # your repo name
+# Each clip sits in the repo root, next to app.py and call-scope.mp4, named
+# exactly as the "slug" shown for each industry below (e.g. accountants.mp4).
+GITHUB_USER = "sammyatt2010-hub"
+GITHUB_REPO = "Callscope"
 GITHUB_BRANCH = "main"
 USE_VIDEO_LINKS = bool(GITHUB_USER)
 
@@ -60,7 +57,7 @@ for _ind in INDUSTRIES:
     if USE_VIDEO_LINKS:
         _ind["url"] = (
             f"https://raw.githubusercontent.com/{GITHUB_USER}/{GITHUB_REPO}"
-            f"/{GITHUB_BRANCH}/videos/{_ind['slug']}.mp4"
+            f"/{GITHUB_BRANCH}/{_ind['slug']}.mp4"
         )
     else:
         _ind["url"] = _ind["deck_url"]
