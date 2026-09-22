@@ -271,7 +271,7 @@ if selected_industry:
     )
 
     if USE_VIDEO_LINKS:
-        st.video(selected_industry["url"])
+        st.video(selected_industry["url"], autoplay=True, loop=True, muted=True)
     else:
         st.info(
             f"The {selected_industry['name']} video isn't uploaded yet. "
@@ -313,9 +313,9 @@ st.markdown(
 # The video
 video_path = HERE / VIDEO_FILE
 if VIDEO_URL:
-    st.video(VIDEO_URL)
+    st.video(VIDEO_URL, autoplay=True, loop=True, muted=True)
 elif video_path.exists():
-    st.video(str(video_path))
+    st.video(str(video_path), autoplay=True, loop=True, muted=True)
 else:
     st.info(
         f"Video not found. Add a file called {VIDEO_FILE} next to app.py, "
