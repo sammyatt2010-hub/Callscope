@@ -62,6 +62,31 @@ for _ind in INDUSTRIES:
     else:
         _ind["url"] = _ind["deck_url"]
 
+# The main video: a pasted URL wins; otherwise, if GITHUB_USER is set, build
+# a raw-file link to VIDEO_FILE in this same repo, same as the industry clips.
+if VIDEO_URL:
+    MAIN_VIDEO_URL = VIDEO_URL
+elif USE_VIDEO_LINKS:
+    MAIN_VIDEO_URL = (
+        f"https://raw.githubusercontent.com/{GITHUB_USER}/{GITHUB_REPO}"
+        f"/{GITHUB_BRANCH}/{VIDEO_FILE}"
+    )
+else:
+    MAIN_VIDEO_URL = ""
+
+
+def render_video(url: str) -> None:
+    """A plain HTML5 video tag - no autoplay, no mute, just a play button
+    the visitor presses; loop keeps it repeating once they do."""
+    st.markdown(
+        f"""
+        <video controls loop playsinline style="width:100%; border-radius:12px; display:block; background:#000;">
+            <source src="{url}" type="video/mp4">
+        </video>
+        """,
+        unsafe_allow_html=True,
+    )
+
 HERE = Path(__file__).parent
 
 st.set_page_config(
@@ -271,7 +296,7 @@ if selected_industry:
     )
 
     if USE_VIDEO_LINKS:
-        st.video(selected_industry["url"], autoplay=True, loop=True, muted=True)
+        render_video(selected_industry["url"])
     else:
         st.info(
             f"The {selected_industry['name']} video isn't uploaded yet. "
@@ -311,11 +336,8 @@ st.markdown(
 )
 
 # The video
-video_path = HERE / VIDEO_FILE
-if VIDEO_URL:
-    st.video(VIDEO_URL, autoplay=True, loop=True, muted=True)
-elif video_path.exists():
-    st.video(str(video_path), autoplay=True, loop=True, muted=True)
+if MAIN_VIDEO_URL:
+    render_video(MAIN_VIDEO_URL)
 else:
     st.info(
         f"Video not found. Add a file called {VIDEO_FILE} next to app.py, "
